@@ -3,6 +3,7 @@ use opentelemetry::{
     Key,
 };
 use std::borrow::Cow;
+use std::time::SystemTime;
 use tracing_core::Level;
 #[cfg(feature = "experimental_metadata_attributes")]
 use tracing_core::Metadata;
@@ -173,6 +174,8 @@ where
         log_record.set_event_name(meta.name());
         log_record.set_severity_number(severity_of_level(meta.level()));
         log_record.set_severity_text(meta.level().as_str());
+        log_record.set_timestamp(SystemTime::now());
+
         let mut visitor = EventVisitor::new(&mut log_record);
         #[cfg(feature = "experimental_metadata_attributes")]
         visitor.visit_experimental_metadata(meta);
